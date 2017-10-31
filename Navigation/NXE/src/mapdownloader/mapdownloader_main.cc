@@ -23,8 +23,8 @@ int main(int argc, char* argv[])
 
     std::shared_ptr<spdlog::sinks::sink> out{ new spdlog::sinks::stdout_sink_mt{} };
     std::shared_ptr<spdlog::sinks::sink> fileOut{ new spdlog::sinks::simple_file_sink_mt{ "/tmp/nxe-md.log" } };
-    std::shared_ptr<spdlog::sinks::sink> syslogOut{ new spdlog::sinks::syslog_sink{ "nxe-mapdownloader", 0, LOG_DAEMON } };
-    spdlog::create("md", { out, fileOut, syslogOut });
+    //std::shared_ptr<spdlog::sinks::sink> syslogOut{ new spdlog::sinks::syslog_sink{ "nxe-mapdownloader", 0, LOG_DAEMON } };
+    spdlog::create("md", { out, fileOut });
     if (debug) {
         spdlog::set_level(spdlog::level::trace);
     }

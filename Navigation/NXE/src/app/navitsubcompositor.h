@@ -1,45 +1,45 @@
-#ifndef NAVITSUBCOMPOSITOR_H
-#define NAVITSUBCOMPOSITOR_H
+//#ifndef NAVITSUBCOMPOSITOR_H
+//#define NAVITSUBCOMPOSITOR_H
 
-#include <QtCompositor/QWaylandQuickCompositor>
+//#include <QtWaylandCompositor/QWaylandQuickCompositor>
 
-#include <QtQuick/QQuickView>
+//#include <QtQuick/QQuickView>
 
-class QWaylandSurfaceItem;
-class QWaylandQuickSurface;
+//class QWaylandSurfaceItem;
+//class QWaylandQuickSurface;
 
-class NavitSubCompositor : public QQuickView, public QWaylandQuickCompositor {
-    Q_OBJECT
-    Q_PROPERTY(QWaylandQuickSurface* fullscreenSurface READ fullscreenSurface WRITE setFullscreenSurface NOTIFY fullscreenSurfaceChanged)
-public:
-    NavitSubCompositor(const QString& socketName = "");
-public slots:
-    QWaylandSurfaceItem *item(QWaylandSurface* surf);
-    QWaylandQuickSurface* fullscreenSurface() const;
-    void setFullscreenSurface(QWaylandQuickSurface* surface);
+//class NavitSubCompositor : public QQuickView, public QWaylandQuickCompositor {
+    //Q_OBJECT
+    //Q_PROPERTY(QWaylandQuickSurface* fullscreenSurface READ fullscreenSurface WRITE setFullscreenSurface NOTIFY fullscreenSurfaceChanged)
+//public:
+    //NavitSubCompositor(const QString& socketName = "");
+//public slots:
+    //QWaylandSurfaceItem *item(QWaylandSurface* surf);
+    //QWaylandQuickSurface* fullscreenSurface() const;
+    //void setFullscreenSurface(QWaylandQuickSurface* surface);
 
-private slots:
-    void sendCallbacks();
+//private slots:
+    //void sendCallbacks();
 
-    // surface
-    void surfaceMapped();
-    void surfaceUnmapped();
-    void surfaceDestroyed();
-signals:
+    //// surface
+    //void surfaceMapped();
+    //void surfaceUnmapped();
+    //void surfaceDestroyed();
+//signals:
 
-    void windowAdded(QVariant window);
-    void windowResized(QVariant window);
-    void windowDestroyed(QVariant window);
+    //void windowAdded(QVariant window);
+    //void windowResized(QVariant window);
+    //void windowDestroyed(QVariant window);
 
-    void fullscreenSurfaceChanged();
+    //void fullscreenSurfaceChanged();
 
-    void resized(const QRect& geo);
+    //void resized(const QRect& geo);
 
-protected:
-    virtual void resizeEvent(QResizeEvent* event) override;
-    virtual void surfaceCreated(QWaylandSurface* surface) override;
-private:
-    QWaylandQuickSurface* m_fullscreenSurface;
-};
+//protected:
+    //virtual void resizeEvent(QResizeEvent* event) override;
+    //virtual void surfaceCreated(QWaylandSurface* surface) override;
+//private:
+    //QWaylandQuickSurface* m_fullscreenSurface;
+//};
 
-#endif // NAVITSUBCOMPOSITOR_H
+//#endif // NAVITSUBCOMPOSITOR_H

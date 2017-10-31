@@ -1,9 +1,9 @@
 #include "nxe_extension.h"
-
 #include "log.h"
 #include "settings.h"
 #include "settingtags.h"
 
+#include <iostream>
 
 using namespace NXE;
 

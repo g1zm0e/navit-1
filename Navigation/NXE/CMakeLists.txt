@@ -3,6 +3,7 @@ project(NXE CXX)
 cmake_minimum_required(VERSION 3.0)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+set(CMAKE_CXX_STANDARD 14)
 add_definitions(-Wall -pedantic)
 add_definitions(-Wno-unused-but-set-variable)
 
@@ -23,6 +24,11 @@ if(NOT NXE_VERSION)
 endif()
 
 message(STATUS "Version=" ${NXE_VERSION})
+
+
+set(SPDLOG_BUILD_TESTING OFF)
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/3rdParty/spdlog)
 
 include_directories(${CMAKE_SOURCE_DIR}/3rdParty/boost-process)
 include_directories(${CMAKE_SOURCE_DIR}/3rdParty/spdlog/include)
