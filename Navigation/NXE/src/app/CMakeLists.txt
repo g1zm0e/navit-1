@@ -12,7 +12,7 @@ find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Qml REQUIRED)
 find_package(Qt5Quick REQUIRED)
-find_package(Qt5Compositor REQUIRED)
+find_package(Qt5WaylandCompositor REQUIRED)
 
 set( srcs
     app-main.cc
@@ -30,7 +30,7 @@ file(GLOB qml_files qml/*.qml qml/*.js qml/nxe-ui/*.qml)
 qt5_add_resources(qrcs qml.qrc)
 
 add_executable(nxe-app ${srcs} ${qrcs} ${qml_files})
-target_link_libraries(nxe-app Qt5::Core Qt5::Qml Qt5::Quick Qt5::Gui Qt5::Compositor nxe pthread)
+target_link_libraries(nxe-app Qt5::Core Qt5::Qml Qt5::Quick Qt5::Gui Qt5::WaylandCompositor nxe pthread)
 
 file(COPY ${CMAKE_SOURCE_DIR}/nxe.conf DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
