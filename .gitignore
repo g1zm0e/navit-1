@@ -3,6 +3,8 @@ build*
 *.pyc
 *.swp
 *build
+*.qmlc
+*.jsc
 nbproject
 nbproject/*
 .ycm_extra_conf.py
