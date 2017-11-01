@@ -202,7 +202,7 @@ TEST_F(NavitDBusTest, search_country)
 {
     connection.startSearch();
     auto results = searchAndBlock(NXE::INavitIPC::SearchType::Country, "Germany");
-    ASSERT_NE(results.size(), 0);
+    ASSERT_NE(results.size(), 0u);
     EXPECT_EQ(results.at(0).country.name, "Germany");
     EXPECT_EQ(results.at(0).country.car, "D");
     EXPECT_EQ(results.at(0).country.iso2, "DE");
@@ -215,7 +215,7 @@ TEST_F(NavitDBusTest, search_multipleCountries)
 {
     connection.startSearch();
     auto results = searchAndBlock(NXE::INavitIPC::SearchType::Country, "P");
-    EXPECT_NE(results.size(), 0);
+    EXPECT_NE(results.size(), 0u);
     connection.finishSearch();
 }
 
@@ -225,7 +225,7 @@ TEST_F(NavitDBusTest, search_city_valid)
     searchAndBlock(NXE::INavitIPC::SearchType::Country, "Germany");
     auto cities = searchAndBlock(NXE::INavitIPC::SearchType::City, "Berlin");
     //Country checks
-    ASSERT_NE(cities.size(), 0);
+    ASSERT_NE(cities.size(), 0u);
     EXPECT_EQ(cities.at(0).country.name, "Germany");
     EXPECT_EQ(cities.at(0).country.car, "D");
     EXPECT_EQ(cities.at(0).country.iso2, "DE");
@@ -246,10 +246,10 @@ TEST_F(NavitDBusTest, search_street_valid)
     connection.startSearch();
     auto country = searchAndBlock(NXE::INavitIPC::SearchType::Country, "Germany");
     nDebug() << "Country size = " << country.size();
-    ASSERT_NE(country.size(), 0);
+    ASSERT_NE(country.size(), 0u);
     auto city = searchAndBlock(NXE::INavitIPC::SearchType::City, "Berlin");
     nDebug() << "City size = " << country.size();
-    ASSERT_NE(city.size(), 0);
+    ASSERT_NE(city.size(), 0u);
     auto streets = searchAndBlock(NXE::INavitIPC::SearchType::Street, "Benfeyweg");
     nDebug() << "Street size= " << streets.size();
     EXPECT_TRUE(std::find_if(streets.begin(), streets.end(), [](const NXE::SearchResult& street) -> bool {
@@ -264,25 +264,25 @@ TEST_F(NavitDBusTest, search_address_valid)
     connection.startSearch();
 
     auto country = searchAndBlock(NXE::INavitIPC::SearchType::Country, "Germany");
-    ASSERT_GT(country.size(), 0);
+    ASSERT_GT(country.size(), 0u);
     connection.selectSearchResult(NXE::INavitIPC::SearchType::Country, country.at(0).searchId);
 
     auto cities = searchAndBlock(NXE::INavitIPC::SearchType::City, "Berlin");
-    ASSERT_GT(cities.size(), 2);
+    ASSERT_GT(cities.size(), 2u);
     connection.selectSearchResult(NXE::INavitIPC::SearchType::City, cities.at(1).searchId);
 
     auto streets = searchAndBlock(NXE::INavitIPC::SearchType::Street, "Benfeyweg");
-    ASSERT_EQ(streets.size(), 1);
+    ASSERT_EQ(streets.size(), 1u);
     connection.selectSearchResult(NXE::INavitIPC::SearchType::Street, streets.at(0).searchId);
 
     auto addresses = searchAndBlock(NXE::INavitIPC::SearchType::Address, "4");
-    ASSERT_NE(country.size(), 0);
-    ASSERT_NE(cities.size(), 0);
+    ASSERT_NE(country.size(), 0u);
+    ASSERT_NE(cities.size(), 0u);
     ASSERT_TRUE(std::find_if(streets.begin(), streets.end(), [](const NXE::SearchResult& street) -> bool {
         return street.street.name == "Benfeyweg";
     }) != streets.end());
 
-    EXPECT_NE(addresses.size(), 0);
+    EXPECT_NE(addresses.size(), 0u);
 
     connection.finishSearch();
 }
@@ -292,25 +292,25 @@ TEST_F(NavitDBusTest, search_incomplete_address_valid)
     connection.startSearch();
 
     auto country = searchAndBlock(NXE::INavitIPC::SearchType::Country, "Germany");
-    ASSERT_GT(country.size(), 0);
+    ASSERT_GT(country.size(), 0u);
     connection.selectSearchResult(NXE::INavitIPC::SearchType::Country, country.at(0).searchId);
 
     auto cities = searchAndBlock(NXE::INavitIPC::SearchType::City, "Berlin");
-    ASSERT_GT(cities.size(), 2);
+    ASSERT_GT(cities.size(), 2u);
     connection.selectSearchResult(NXE::INavitIPC::SearchType::City, cities.at(1).searchId);
 
     auto streets = searchAndBlock(NXE::INavitIPC::SearchType::Street, "Benf");
-    ASSERT_EQ(streets.size(), 2);
+    ASSERT_EQ(streets.size(), 2u);
     connection.selectSearchResult(NXE::INavitIPC::SearchType::Street, streets.at(1).searchId);
 
     auto addresses = searchAndBlock(NXE::INavitIPC::SearchType::Address, "");
-    ASSERT_NE(country.size(), 0);
-    ASSERT_NE(cities.size(), 0);
+    ASSERT_NE(country.size(), 0u);
+    ASSERT_NE(cities.size(), 0u);
     ASSERT_TRUE(std::find_if(streets.begin(), streets.end(), [](const NXE::SearchResult& street) -> bool {
         return street.street.name == "Benfeyweg";
     }) != streets.end());
 
-    EXPECT_NE(addresses.size(), 0);
+    EXPECT_NE(addresses.size(), 0u);
 
     connection.finishSearch();
 }
@@ -326,8 +326,8 @@ TEST_F(NavitDBusTest, currentCenter)
     });
     connection.currentCenter();
     ASSERT_TRUE(waitFor(rec));
-    EXPECT_NE(pos.latitude, 0);
-    EXPECT_NE(pos.latitude, 0);
+    EXPECT_NE(pos.latitude, 0u);
+    EXPECT_NE(pos.latitude, 0u);
 }
 
 TEST_F(NavitDBusTest, changeCenter)

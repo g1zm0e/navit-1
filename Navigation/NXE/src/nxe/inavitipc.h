@@ -63,7 +63,6 @@ public:
         Address
     };
 
-    typedef boost::signals2::signal<void(std::string)> SpeechSignalType;
     typedef boost::signals2::signal<void(std::string)> RoutingSignalType;
     typedef boost::signals2::signal<void(const PointClicked&)> PointClickedSignalType;
     typedef boost::signals2::signal<void()> InitializedSignalType;
@@ -131,7 +130,6 @@ public:
 
 
     // Signals from IPC
-    virtual SpeechSignalType& speechSignal() = 0;
     virtual PointClickedSignalType& pointClickedSignal() = 0;
     virtual PointClickedSignalType& tapSignal() = 0;
     virtual InitializedSignalType& initializedSignal() = 0;

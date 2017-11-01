@@ -6,15 +6,12 @@
 #include "inavitipc.h"
 #include "igpsprovider.h"
 #include "imapdownloader.h"
-#include "ispeech.h"
 
 #include <sstream>
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <thread>
-
-using namespace std;
 
 namespace NXE {
 
@@ -25,7 +22,6 @@ struct NXEInstancePrivate {
         , ipc(NXE::get<std::shared_ptr<INavitIPC> >(ifaces))
         , gps(NXE::get<std::shared_ptr<IGPSProvider> >(ifaces))
         , mapDownloaderIPC(NXE::get<std::shared_ptr<IMapDownloader> >(ifaces))
-        , speech(NXE::get<std::shared_ptr<ISpeech> >(ifaces))
         , geometry(std::make_pair(0, 0))
     {
         ipc->initializedSignal().connect([this]() {
@@ -40,7 +36,6 @@ struct NXEInstancePrivate {
     std::shared_ptr<INavitIPC> ipc;
     std::shared_ptr<IGPSProvider> gps;
     std::shared_ptr<IMapDownloader> mapDownloaderIPC;
-    std::shared_ptr<ISpeech> speech;
     std::pair<int, int> geometry;
     Settings settings;
     bool initialized{ false };
@@ -152,12 +147,6 @@ void NXEInstance::startNavit()
             nInfo() << "Navit external is set, won't run";
         }
         nDebug() << "Trying to start IPC Navit controller";
-        d->ipc->speechSignal().connect([this](const std::string& string) {
-            nDebug() << "Saying " << string << " speech pointer = " << static_cast<void*>(d->speech.get());
-            if (d->speech && !(d->mute)) {
-                d->speech->say(string);
-            }
-        });
     }
     d->initialized = true;
 }
@@ -202,7 +191,7 @@ void NXEInstance::resize(int w, int h)
     d->resize(w, h);
 }
 
-void NXEInstance::startNavigation(double lat, double lon, const string& description)
+void NXEInstance::startNavigation(double lat, double lon, const std::string& description)
 {
     assert(d && d->ipc);
     d->ipc->setDestination(lat, lon, description);

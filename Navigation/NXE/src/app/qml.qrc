@@ -8,6 +8,7 @@
         <file>qml/closebutton.png</file>
         <file>qml/compositor.js</file>
         <file>qml/CompositorMainView.qml</file>
+        <file>qml/CompositorMain.qml</file>
         <file>qml/ContrastEffect.qml</file>
         <file>qml/WindowChrome.qml</file>
         <file>qml/WindowContainer.qml</file>

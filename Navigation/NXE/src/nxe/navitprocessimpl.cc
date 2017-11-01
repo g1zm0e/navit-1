@@ -57,6 +57,7 @@ bool NavitProcessImpl::start()
 
     try {
         const std::string platform = settings.get<SettingsTags::Navit::GraphicPlatform>();
+        nDebug() << "Platform to run navit under = " << platform;
 
         int i = 1;
         char* s = *environ;
@@ -127,6 +128,7 @@ bool NavitProcessImpl::isRunning()
 
 void NavitProcessImpl::setSocketName(const std::string& socket)
 {
+    nDebug() << "Setting socket name to " << socket;
     d->socketName = socket;
 }
 

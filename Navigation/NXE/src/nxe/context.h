@@ -8,7 +8,6 @@ class INavitIPC;
 class INavitProcess;
 class IGPSProvider;
 class IMapDownloader;
-class ISpeech;
 
 template<int Index, class Search, class First, class... Types>
 struct get_internal
@@ -34,8 +33,7 @@ namespace DI {
 typedef std::tuple<std::shared_ptr<INavitIPC>,
                     std::shared_ptr<INavitProcess>,
                     std::shared_ptr<IGPSProvider>,
-                    std::shared_ptr<IMapDownloader>,
-                    std::shared_ptr<ISpeech>
+                    std::shared_ptr<IMapDownloader>
         >Injector;
 
 } // DI

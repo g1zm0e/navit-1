@@ -5,7 +5,6 @@
 #include "gpsdprovider.h"
 #include "testutils.h"
 #include "dbuscontroller.h"
-#include "mocks/speechmock.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -24,8 +23,7 @@ struct NXEMultithreadingTest : public ::testing::Test {
                     std::shared_ptr<NXE::INavitIPC>(ipc),
                     std::shared_ptr<NXE::INavitProcess>(new NXE::NavitProcessImpl),
                     std::shared_ptr<NXE::IGPSProvider>(new GPSDProvider),
-                    std::shared_ptr<NXE::IMapDownloader>(new MapDownloaderDBus{dbusController}),
-                    std::shared_ptr<NXE::ISpeech>(new SpeechMock)
+                    std::shared_ptr<NXE::IMapDownloader>(new MapDownloaderDBus{dbusController})
                     )};
     NXEInstance instance{ injector };
     bool receivedRender{ false };

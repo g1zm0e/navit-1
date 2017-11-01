@@ -1,8 +1,8 @@
 #ifndef TESTUTILS_H
 #define TESTUTILS_H
 
-#include <string>
 #include <chrono>
+#include <string>
 #include "log.h"
 
 namespace TestUtils {
@@ -10,6 +10,6 @@ namespace TestUtils {
 void createNXEConfFile();
 void removeNXEConfFile();
 
-} //TestUtils
+}  // namespace TestUtils
 
-#endif // TESTUTILS_H
+#endif  // TESTUTILS_H

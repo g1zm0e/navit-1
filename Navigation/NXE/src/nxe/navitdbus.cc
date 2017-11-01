@@ -171,15 +171,6 @@ struct NavitDBusObjectProxy : public ::DBus::InterfaceProxy, public ::DBus::Obje
         std::vector<std::pair<std::string, DBus::Variant> > res;
         it >> res;
 
-        bool isSpeechSignal = std::find_if(res.begin(), res.end(), [](const std::pair<std::string, DBus::Variant>& val) -> bool {
-            if (val.first == "type") {
-                const std::string strVal = DBusHelpers::getFromIter<std::string>(val.second.reader());
-                return strVal == "speech";
-            }
-            return false;
-
-        }) != res.end();
-
         bool isRoutingSignal = std::find_if(res.begin(), res.end(), [](const std::pair<std::string, DBus::Variant>& val) -> bool {
             if (val.first == "type") {
                 const std::string strVal = DBusHelpers::getFromIter<std::string>(val.second.reader());
@@ -201,19 +192,7 @@ struct NavitDBusObjectProxy : public ::DBus::InterfaceProxy, public ::DBus::Obje
             return val.first == "destination_length";
         }) != res.end();
 
-        if (isSpeechSignal) {
-            dbusTrace() << "Speech callback";
-            auto dataIter = std::find_if(res.begin(), res.end(), [](const std::pair<std::string, ::DBus::Variant>& val) -> bool {
-                return val.first == "data";
-            });
-
-            if (dataIter != res.end()) {
-                std::string data = DBusHelpers::getFromIter<std::string>(dataIter->second.reader());
-                dbusTrace() << " I have to say " << data;
-                speechSignal(data);
-            }
-        }
-        else if (isRoutingSignal) {
+        if (isRoutingSignal) {
             dbusTrace() << "Routing signal!";
             auto dataIter = std::find_if(res.begin(), res.end(), [](const std::pair<std::string, ::DBus::Variant>& val) -> bool {
                 return val.first == "data";
@@ -312,7 +291,6 @@ struct NavitDBusObjectProxy : public ::DBus::InterfaceProxy, public ::DBus::Obje
         return retVal;
     }
 
-    INavitIPC::SpeechSignalType speechSignal;
     INavitIPC::PointClickedSignalType pointClickedSignal;
     INavitIPC::PointClickedSignalType tapSignal;
     INavitIPC::InitializedSignalType initializedSignal;
@@ -990,12 +968,6 @@ INavitIPC::BoolSignalType& NavitDBus::navigationChanged()
 INavitIPC::StringSignalType& NavitDBus::currentStreetResponse()
 {
     return d->currentStreetSignal;
-}
-
-INavitIPC::SpeechSignalType& NavitDBus::speechSignal()
-{
-    assert(d && d->object);
-    return d->object->speechSignal;
 }
 
 INavitIPC::PointClickedSignalType& NavitDBus::pointClickedSignal()

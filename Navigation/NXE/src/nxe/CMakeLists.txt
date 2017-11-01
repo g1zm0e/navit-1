@@ -13,7 +13,6 @@ set (dbus_library
     navitdbus.cc
     mapdownloaderdbus.cc
     dbuscontroller.cc
-    speechimpldbus.cc
 )
 
 set(nxe_interfaces
@@ -21,7 +20,6 @@ set(nxe_interfaces
     inavitipc.h
     igpsprovider.h
     imapdownloader.h
-    ispeech.h
 )
 
 set(NXE_SRCS

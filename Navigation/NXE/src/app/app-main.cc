@@ -5,6 +5,8 @@
 #include <QtGui/QScreen>
 #include <QtQml/QQmlContext>
 
+#include <QtQml/QQmlApplicationEngine>
+
 #include <memory>
 #include <numeric>
 #include <vector>
@@ -19,31 +21,32 @@
 #include "settings.h"
 #include "settingtags.h"
 
-void qtLogOutput(QtMsgType type, const QMessageLogContext& ctx,
-                 const QString& msg) {
-    static std::map<std::string, std::string> cats;
-    if (cats.empty()) {
-        cats["default"] = "Qt";
-        cats["qml"] = "QtQuick";
-    }
-    const std::string cat{cats[ctx.category]};
-    switch (type) {
-        case QtDebugMsg:
-            spdlog::get(cat)->warn()
-                << ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
-            break;
-        case QtWarningMsg:
-            spdlog::get(cat)->warn()
-                << ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
-            break;
-        case QtCriticalMsg:
-            spdlog::get(cat)->critical()
-                << ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
-        case QtFatalMsg:
-            spdlog::get(cat)->emerg()
-                << ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
-    }
-}
+// void qtLogOutput(QtMsgType type, const QMessageLogContext& ctx,
+// const QString& msg) {
+// static std::map<std::string, std::string> cats;
+// if (cats.empty()) {
+// cats["default"] = "Qt";
+// cats["qml"] = "QtQuick";
+//}
+// const std::string cat{cats[ctx.category]};
+// switch (type) {
+// case QtInfoMsg:
+// case QtDebugMsg:
+// spdlog::get(cat)->debug()
+//<< ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
+// break;
+// case QtWarningMsg:
+// spdlog::get(cat)->warn()
+//<< ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
+// break;
+// case QtCriticalMsg:
+// spdlog::get(cat)->critical()
+//<< ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
+// case QtFatalMsg:
+// spdlog::get(cat)->emerg()
+//<< ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
+//}
+//}
 
 void createLoggers() {
     NXE::Settings s;
@@ -61,7 +64,7 @@ void createLoggers() {
     // Create nxe logger
     NXE::NXExtension::createLogger();
 
-    qInstallMessageHandler(qtLogOutput);
+    // qInstallMessageHandler(qtLogOutput);
 }
 
 int main(int argc, char* argv[]) {
@@ -90,6 +93,9 @@ int main(int argc, char* argv[]) {
          QCoreApplication::translate("main", "path")},
     });
 
+    parser.setApplicationDescription("nxe");
+    parser.addHelpOption();
+
     createLoggers();
     spdlog::set_pattern("[%H:%M:%S.%e] [%n] [%t] [%l] %v");
 
@@ -114,12 +120,21 @@ int main(int argc, char* argv[]) {
 
     // Create subcompositor
     try {
-        const QString waylandSocketName =
-            QByteArray{"navit-"} + QUuid::createUuid().toByteArray();
+        const QString waylandSocketName = QByteArray{"navit-wayland-socket"};
+        QQmlApplicationEngine engine;
+
+        NavitQuickProxy proxy{waylandSocketName, engine.rootContext()};
+        engine.rootContext()->setContextProperty("navitProxy", &proxy);
+        engine.rootContext()->setContextProperty("navitMapsProxy",
+                                                 proxy.navitMapsProxy());
+        engine.rootContext()->setContextProperty("navigationProxy",
+                                                 proxy.navitNavigationProxy());
+
+        engine.load(QUrl("qrc:///qml/CompositorMain.qml"));
         // NavitSubCompositor view{waylandSocketName};
         // aInfo() << "Starting nxe-app with wayland socket name= "
         //<< view.socketName();
-        // NavitQuickProxy proxy{view.socketName(), view.rootContext()};
+
         // view.rootContext()->setContextProperty("navitProxy", &proxy);
         // view.rootContext()->setContextProperty("navitMapsProxy",
         // proxy.navitMapsProxy());
@@ -136,10 +151,8 @@ int main(int argc, char* argv[]) {
         // QObject::connect(&view, &NavitSubCompositor::resized,
         //[&proxy](const QRect& rect) { proxy.resize(rect); });
 
-        // QObject::connect(&proxy, &NavitQuickProxy::quitSignal, &app,
-        //&QGuiApplication::quit);
-        // QObject::connect(&view, &NavitSubCompositor::windowDestroyed,
-        //[](QVariant) { aInfo() << "Window destroyed!!!!"; });
+        QObject::connect(&proxy, &NavitQuickProxy::quitSignal, &app,
+                         &QGuiApplication::quit);
 
         ret = app.exec();
 

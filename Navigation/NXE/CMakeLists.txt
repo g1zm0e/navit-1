@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.0)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 set(CMAKE_CXX_STANDARD 14)
 add_definitions(-Wall -pedantic)
-add_definitions(-Wno-unused-but-set-variable)
+add_definitions(-Wno-unused-but-set-variable -Wno-deprecated-declarations)
 
 if(NOT NXE_VERSION)
     execute_process(

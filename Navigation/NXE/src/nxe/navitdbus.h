@@ -58,7 +58,6 @@ public:
     virtual BoolSignalType& navigationChanged() override;
     virtual StringSignalType& currentStreetResponse() override;
 
-    virtual SpeechSignalType& speechSignal() override;
     virtual PointClickedSignalType& pointClickedSignal() override;
     virtual PointClickedSignalType& tapSignal() override;
     virtual InitializedSignalType& initializedSignal() override;
