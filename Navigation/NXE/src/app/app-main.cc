@@ -19,30 +19,31 @@
 #include "settings.h"
 #include "settingtags.h"
 
-// void qtLogOutput(QtMsgType type, const QMessageLogContext& ctx, const
-// QString& msg)
-//{
-// static std::map<std::string, std::string> cats;
-// if (cats.empty()) {
-// cats["default"] = "Qt";
-// cats["qml"] = "QtQuick";
-//}
-// const std::string cat{ cats[ctx.category] };
-// switch (type) {
-// case QtDebugMsg:
-// spdlog::get(cat)->warn() << ctx.file << "@" << ctx.line << " " <<
-// msg.toLatin1().data();  break;
-// case QtWarningMsg:
-// spdlog::get(cat)->warn() << ctx.file << "@" << ctx.line << " " <<
-// msg.toLatin1().data();  break;
-// case QtCriticalMsg:
-// spdlog::get(cat)->critical() << ctx.file << "@" << ctx.line << " " <<
-// msg.toLatin1().data();
-// case QtFatalMsg:
-// spdlog::get(cat)->emerg() << ctx.file << "@" << ctx.line << " " <<
-// msg.toLatin1().data();
-//}
-//}
+void qtLogOutput(QtMsgType type, const QMessageLogContext& ctx,
+                 const QString& msg) {
+    static std::map<std::string, std::string> cats;
+    if (cats.empty()) {
+        cats["default"] = "Qt";
+        cats["qml"] = "QtQuick";
+    }
+    const std::string cat{cats[ctx.category]};
+    switch (type) {
+        case QtDebugMsg:
+            spdlog::get(cat)->warn()
+                << ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
+            break;
+        case QtWarningMsg:
+            spdlog::get(cat)->warn()
+                << ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
+            break;
+        case QtCriticalMsg:
+            spdlog::get(cat)->critical()
+                << ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
+        case QtFatalMsg:
+            spdlog::get(cat)->emerg()
+                << ctx.file << "@" << ctx.line << " " << msg.toLatin1().data();
+    }
+}
 
 void createLoggers() {
     NXE::Settings s;
@@ -60,7 +61,7 @@ void createLoggers() {
     // Create nxe logger
     NXE::NXExtension::createLogger();
 
-    // qInstallMessageHandler(qtLogOutput);
+    qInstallMessageHandler(qtLogOutput);
 }
 
 int main(int argc, char* argv[]) {
@@ -97,7 +98,6 @@ int main(int argc, char* argv[]) {
 
     qDebug() << " args=" << app.arguments();
     parser.parse(app.arguments());
-#if defined(NXE_OS_LINUX)
     const QString navitPath = parser.value("navit-path");
     const QString rmDest = QString("rm -rf %1/destination.txt").arg(navitPath);
     system(rmDest.toLatin1().data());
@@ -106,7 +106,6 @@ int main(int argc, char* argv[]) {
     s.save();
     s.set<SettingsTags::Navit::ExternalNavit>(parser.isSet("external-navit"));
     s.save();
-#endif
 
     if (parser.isSet("debug")) {
         spdlog::set_level(spdlog::level::trace);
@@ -117,30 +116,30 @@ int main(int argc, char* argv[]) {
     try {
         const QString waylandSocketName =
             QByteArray{"navit-"} + QUuid::createUuid().toByteArray();
-        //NavitSubCompositor view{waylandSocketName};
-        //aInfo() << "Starting nxe-app with wayland socket name= "
-                //<< view.socketName();
-        //NavitQuickProxy proxy{view.socketName(), view.rootContext()};
-        //view.rootContext()->setContextProperty("navitProxy", &proxy);
-        //view.rootContext()->setContextProperty("navitMapsProxy",
-                                               //proxy.navitMapsProxy());
-        //view.rootContext()->setContextProperty("navigationProxy",
-                                               //proxy.navitNavigationProxy());
-        //view.rootContext()->setContextProperty("compositor", &view);
-        //view.setSource(QUrl("qrc:///qml/CompositorMainView.qml"));
-        //view.showMaximized();
+        // NavitSubCompositor view{waylandSocketName};
+        // aInfo() << "Starting nxe-app with wayland socket name= "
+        //<< view.socketName();
+        // NavitQuickProxy proxy{view.socketName(), view.rootContext()};
+        // view.rootContext()->setContextProperty("navitProxy", &proxy);
+        // view.rootContext()->setContextProperty("navitMapsProxy",
+        // proxy.navitMapsProxy());
+        // view.rootContext()->setContextProperty("navigationProxy",
+        // proxy.navitNavigationProxy());
+        // view.rootContext()->setContextProperty("compositor", &view);
+        // view.setSource(QUrl("qrc:///qml/CompositorMainView.qml"));
+        // view.showMaximized();
         //// Initialize all
-        //QObject::connect(&view, SIGNAL(windowAdded(QVariant)),
-                         //view.rootObject(), SLOT(windowAdded(QVariant)));
-        //QObject::connect(&view, SIGNAL(windowResized(QVariant)),
-                         //view.rootObject(), SLOT(windowResized(QVariant)));
-        //QObject::connect(&view, &NavitSubCompositor::resized,
-                         //[&proxy](const QRect& rect) { proxy.resize(rect); });
+        // QObject::connect(&view, SIGNAL(windowAdded(QVariant)),
+        // view.rootObject(), SLOT(windowAdded(QVariant)));
+        // QObject::connect(&view, SIGNAL(windowResized(QVariant)),
+        // view.rootObject(), SLOT(windowResized(QVariant)));
+        // QObject::connect(&view, &NavitSubCompositor::resized,
+        //[&proxy](const QRect& rect) { proxy.resize(rect); });
 
-        //QObject::connect(&proxy, &NavitQuickProxy::quitSignal, &app,
-                         //&QGuiApplication::quit);
-        //QObject::connect(&view, &NavitSubCompositor::windowDestroyed,
-                         //[](QVariant) { aInfo() << "Window destroyed!!!!"; });
+        // QObject::connect(&proxy, &NavitQuickProxy::quitSignal, &app,
+        //&QGuiApplication::quit);
+        // QObject::connect(&view, &NavitSubCompositor::windowDestroyed,
+        //[](QVariant) { aInfo() << "Window destroyed!!!!"; });
 
         ret = app.exec();
 
